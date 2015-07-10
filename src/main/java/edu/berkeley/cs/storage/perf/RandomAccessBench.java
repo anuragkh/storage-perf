@@ -47,7 +47,7 @@ public class RandomAccessBench {
         long fileSize = BenchmarkUtils.getFileSize(path, conf);
 
         // We only support in-memory benchmark for files < 2GB
-        if(fileSize >= (1<<32)) {
+        if(fileSize > Integer.MAX_VALUE - 8) {
             throw new IOException("File too large.");
         }
 
