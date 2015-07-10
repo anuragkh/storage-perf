@@ -80,7 +80,7 @@ public class RandomAccessBench {
     }
 
     public void benchAll(String resPath) throws IOException {
-        benchRandomAccess(resPath);
+        benchRandomAccess(resPath + "_storage");
         benchRandomAccessInMemory(resPath + "_mem");
     }
 }
