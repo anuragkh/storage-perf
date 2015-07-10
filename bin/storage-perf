@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Runs the storage perf
+##
+
+bin="`dirname "$0"`"
+bin="`cd "$bin"; pwd`"
+
+. "$bin/storage-config.sh"
+. "$STORAGE_PREFIX/bin/load-storage-env.sh"
+
+JAR_PATH="$STORAGE_PREFIX/target"
+
+JAR_COUNT=0
+
+for f in "${JAR_PATH}"/storage-perf-*-jar-with-dependencies.jar; do
+  if [[ ! -e "$f" ]]; then
+    echo "Failed to find Storage Perf assembly in $JAR_PATH" 1>&2
+    echo "You need to build Storage Perf before running this program" 1>&2
+    exit 1
+  fi
+  STORAGE_CORE_JAR="$f"
+  JAR_COUNT=$((JAR_COUNT+1))
+done
+
+if [ "$JAR_COUNT" -gt "1" ]; then
+  echo "Found multiple Storage Perf assemblies in $JAR_PATH" 1>&2
+  ls "${JAR_PATH}"/storage-perf-*-jar-with-dependencies.jar 1>&2
+  echo "Please remove all but one jar." 1>&2
+  exit 1
+fi
+
+java -cp $STORAGE_CORE_JAR edu.berkeley.cs.storage.perf.Benchmark $@

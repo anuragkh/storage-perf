@@ -1,0 +1,25 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.eml
+*.iml
+
+# Mac OSX
+.DS_Store
+
+# Build Directories
+core/target/
+spark/target/
+target/
+
+# vim tmps
+.*sw*
+
+# sbt
+project/project
+project/target
+.history
