@@ -48,7 +48,7 @@ public class Benchmark {
             }
 
             if(benchType.equalsIgnoreCase("all")) {
-                new RandomAccessBench(new Path(dataPath)).benchRandomAccess(resPath);
+                new RandomAccessBench(new Path(dataPath)).benchAll(resPath);
             } else if(benchType.equalsIgnoreCase("random-access")) {
                 new RandomAccessBench(new Path(dataPath)).benchRandomAccess(resPath);
             } else {

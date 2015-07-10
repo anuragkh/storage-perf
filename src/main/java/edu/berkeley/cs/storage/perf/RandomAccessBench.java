@@ -7,6 +7,7 @@ import org.apache.hadoop.fs.Path;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class RandomAccessBench {
 
@@ -28,13 +29,45 @@ public class RandomAccessBench {
 
         for(long offset: offsets) {
             long start = System.nanoTime();
-            randomAccess(is, offset);
+            long val = randomAccess(is, offset);
             long end = System.nanoTime();
-            bufferedWriter.write(offset + "\t" + (end - start) + "\n");
+            bufferedWriter.write(offset + "\t" + val + "\t" + (end - start) + "\n");
             totalTime += (end - start);
         }
 
         is.close();
+
+        double avgTime = totalTime / MAX_QUERIES;
+        System.out.println("Average time per 8 byte random-access: " + avgTime);
+        bufferedWriter.close();
+    }
+
+    public void benchRandomAccessInMemory(String resPath) throws IOException {
+        FSDataInputStream is = BenchmarkUtils.getStream(path, conf);
+        long fileSize = BenchmarkUtils.getFileSize(path, conf);
+
+        // We only support in-memory benchmark for files < 2GB
+        if(fileSize >= (1<<32)) {
+            throw new IOException("File too large.");
+        }
+
+        byte[] data = new byte[(int)fileSize];
+        is.readFully(0, data);
+        ByteBuffer buf = ByteBuffer.wrap(data);
+        is.close();
+
+        long[] offsets = BenchmarkUtils.generateRandoms(MAX_QUERIES, fileSize - 8L);
+
+        double totalTime = 0.0;
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(resPath));
+
+        for(long offset: offsets) {
+            long start = System.nanoTime();
+            long val = buf.get((int) offset);
+            long end = System.nanoTime();
+            bufferedWriter.write(offset + "\t" + val + "\t" + (end - start) + "\n");
+            totalTime += (end - start);
+        }
 
         double avgTime = totalTime / MAX_QUERIES;
         System.out.println("Average time per 8 byte random-access: " + avgTime);
@@ -46,4 +79,8 @@ public class RandomAccessBench {
         return is.readLong();
     }
 
+    public void benchAll(String resPath) throws IOException {
+        benchRandomAccess(resPath);
+        benchRandomAccessInMemory(resPath + "_mem");
+    }
 }
