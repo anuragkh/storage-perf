@@ -19,7 +19,7 @@ for f in "${JAR_PATH}"/storage-perf-*-jar-with-dependencies.jar; do
     echo "You need to build Storage Perf before running this program" 1>&2
     exit 1
   fi
-  STORAGE_CORE_JAR="$f"
+  STORAGE_PERF_JAR="$f"
   JAR_COUNT=$((JAR_COUNT+1))
 done
 
@@ -30,4 +30,6 @@ if [ "$JAR_COUNT" -gt "1" ]; then
   exit 1
 fi
 
-java -cp $STORAGE_CORE_JAR edu.berkeley.cs.storage.perf.Benchmark $@
+export CLASSPATH=$CLASSPATH:$STORAGE_PERF_JAR
+
+java -cp $CLASSPATH edu.berkeley.cs.storage.perf.Benchmark $@
