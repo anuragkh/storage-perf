@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # resolve links - $0 may be a softlink
 this="${BASH_SOURCE:-$0}"
 common_bin="$(cd -P -- "$(dirname -- "$this")" && pwd -P)"
