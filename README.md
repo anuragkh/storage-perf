@@ -3,7 +3,7 @@
 This is a performance bencmark framework for various distributed storage 
 systems, particularly 
 [HDFS-like](http://hadoop.apache.org/docs/r1.2.1/hdfs_design.html) systems 
-(e.g., [Tachyon](http://tachyonp-roject.org).
+(e.g., [Tachyon](http://tachyonp-roject.org)).
 
 ## Building
 
@@ -66,7 +66,7 @@ Files on HDFS are typically represented by "hdfs://" followed by the IP and port
 of the namenode host. Additionally, the core-site.xml file should contain the
 following property:
 
-```
+```xml
 <property>
     <name>fs.hdfs.impl</name>
     <value>org.apache.hadoop.hdfs.DistributedFileSystem</value>
@@ -81,7 +81,7 @@ by the "tachyon://" prefix, followed by the IP and port of the Tachyon Master,
 which is followed by the path of the file on Tachyon FS. The core-site.xml file
 should contain the following property:
 
-```
+```xml
 <property>
     <name>fs.tachyon.impl</name>
     <value>tachyon.hadoop.TFS</value>
